@@ -1,0 +1,15 @@
+.controller0,
+.controller1,
+.controller2,
+.controller3,
+.controller4,
+.controller5,
+.controller6 { background-image: url('controller_icons.png'); width: 16px; height: 16px; }
+
+.controller0 { background-position: -0px; }
+.controller1 { background-position: -16px; }
+.controller2 { background-position: -32px; }
+.controller3 { background-position: -48px; }
+.controller4 { background-position: -64px; }
+.controller5 { background-position: -80px; }
+.controller6 { background-position: -96px; }

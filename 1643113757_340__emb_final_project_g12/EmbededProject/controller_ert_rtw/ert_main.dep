@@ -1,0 +1,37 @@
+ert_main.o: E:/EmbededProject/controller_ert_rtw/ert_main.c \
+ E:/EmbededProject/controller_ert_rtw/controller.h \
+ E:/EmbededProject/controller_ert_rtw/rtwtypes.h \
+ E:/4_Installed_Softwares/MATLAB2021a/simulink/include/rtw_continuous.h \
+ E:/EmbededProject/controller_ert_rtw/rtwtypes.h \
+ E:/4_Installed_Softwares/MATLAB2021a/simulink/include/rtw_solver.h \
+ E:/4_Installed_Softwares/MATLAB2021a/simulink/include/rtw_continuous.h \
+ E:/EmbededProject/controller_ert_rtw/controller_types.h \
+ E:/EmbededProject/controller_ert_rtw/MW_target_hardware_resources.h \
+ C:/PROGRA~3/MATLAB/SUPPOR~1/R2021a/toolbox/target/SUPPOR~1/ARDUIN~1/SCHEDU~1/include/arduinoAVRScheduler.h \
+ C:/ProgramData/MATLAB/SupportPackages/R2021a/aIDE/hardware/arduino/avr/cores/arduino/Arduino.h \
+ C:/ProgramData/MATLAB/SupportPackages/R2021a/aIDE/hardware/arduino/avr/cores/arduino/binary.h \
+ C:/ProgramData/MATLAB/SupportPackages/R2021a/aIDE/hardware/arduino/avr/variants/standard/pins_arduino.h
+
+E:/EmbededProject/controller_ert_rtw/controller.h:
+
+E:/EmbededProject/controller_ert_rtw/rtwtypes.h:
+
+E:/4_Installed_Softwares/MATLAB2021a/simulink/include/rtw_continuous.h:
+
+E:/EmbededProject/controller_ert_rtw/rtwtypes.h:
+
+E:/4_Installed_Softwares/MATLAB2021a/simulink/include/rtw_solver.h:
+
+E:/4_Installed_Softwares/MATLAB2021a/simulink/include/rtw_continuous.h:
+
+E:/EmbededProject/controller_ert_rtw/controller_types.h:
+
+E:/EmbededProject/controller_ert_rtw/MW_target_hardware_resources.h:
+
+C:/PROGRA~3/MATLAB/SUPPOR~1/R2021a/toolbox/target/SUPPOR~1/ARDUIN~1/SCHEDU~1/include/arduinoAVRScheduler.h:
+
+C:/ProgramData/MATLAB/SupportPackages/R2021a/aIDE/hardware/arduino/avr/cores/arduino/Arduino.h:
+
+C:/ProgramData/MATLAB/SupportPackages/R2021a/aIDE/hardware/arduino/avr/cores/arduino/binary.h:
+
+C:/ProgramData/MATLAB/SupportPackages/R2021a/aIDE/hardware/arduino/avr/variants/standard/pins_arduino.h:

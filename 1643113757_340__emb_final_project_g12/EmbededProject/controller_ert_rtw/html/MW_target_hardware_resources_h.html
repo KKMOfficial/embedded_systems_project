@@ -1,0 +1,144 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>RTW Report - MW_target_hardware_resources.h</title>
+<link rel="stylesheet" type="text/css" href="rtwreport.css"></link><script language="JavaScript" type="text/javascript" src="rtwreport_utils.js"></script>
+<SCRIPT type="text/javascript" src="rtwannotate.js"></SCRIPT>
+</head>
+<body bgcolor="#eeeeee" onload="try {if (top) { if (top.rtwFileOnLoad) top.rtwFileOnLoad(window.document); else local_onload();}} catch(err) {};if (typeof rtwannotate === 'function') {rtwannotate('MW_target_hardware_resources_h_cov.xml');}">
+<p>
+<table border="0" cellspacing="0" cellpadding="6" width="100%%" height="100%%"><tr><td width="100%%" valign="top" bgcolor="#ffffff">
+<h4>File: <a href="../MW_target_hardware_resources.h" target="rtwreport_document_frame" id="linkToText_plain">MW_target_hardware_resources.h</a></h4>
+<pre id="RTWcode">
+<span><a class="LN" name="1">    1   </a><font color="#992211">#</font><span class="PP">ifndef</span> PORTABLE_WORDSIZES
+</span><span><a class="LN" name="2">    2   </a><font color="#992211">#</font><span class="PP">ifdef</span> __MW_TARGET_USE_HARDWARE_RESOURCES_H__
+</span><span><a class="LN" name="3">    3   </a><font color="#992211">#</font><span class="PP">ifndef</span> __MW_TARGET_HARDWARE_RESOURCES_H__
+</span><span><a class="LN" name="4">    4   </a><font color="#992211">#</font><span class="PP">define</span> __MW_TARGET_HARDWARE_RESOURCES_H__
+</span><span><a class="LN" name="5">    5   </a>
+</span><span><a class="LN" name="6">    6   </a><font color="#992211">#</font><span class="PP">define</span> MW_MULTI_TASKING_MODE 1
+</span><span><a class="LN" name="7">    7   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;arduinoAVRScheduler.h&quot;</font>
+</span><span><a class="LN" name="8">    8   </a>
+</span><span><a class="LN" name="9">    9   </a><font color="#992211">#</font><span class="PP">define</span> MW_USECODERTARGET 1
+</span><span><a class="LN" name="10">   10   </a><font color="#992211">#</font><span class="PP">define</span> MW_TARGETHARDWARE Arduino Uno
+</span><span><a class="LN" name="11">   11   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_SERIAL_IPADDRESS codertarget.arduinobase.registry.<a name="var_getLoopbackIP">getLoopbackIP</a>;
+</span><span><a class="LN" name="12">   12   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_SERIAL_PORT 17725
+</span><span><a class="LN" name="13">   13   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_SERIAL_VERBOSE 0
+</span><span><a class="LN" name="14">   14   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_TCPIP_IPADDRESS codertarget.arduinobase.internal.getExternalModeMexArgs(<font color="#1122ff">'Ethernet'</font>)
+</span><span><a class="LN" name="15">   15   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_TCPIP_PORT 17725
+</span><span><a class="LN" name="16">   16   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_TCPIP_VERBOSE 0
+</span><span><a class="LN" name="17">   17   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_WIFI_IPADDRESS codertarget.arduinobase.internal.getExternalModeMexArgs(<font color="#1122ff">'Wifi'</font>)
+</span><span><a class="LN" name="18">   18   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_WIFI_PORT 17725
+</span><span><a class="LN" name="19">   19   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_WIFI_VERBOSE 0
+</span><span><a class="LN" name="20">   20   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONSERIAL_BAUDRATE codertarget.arduinobase.registry.getBaudRate
+</span><span><a class="LN" name="21">   21   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONSERIAL_COMPORT codertarget.arduinobase.internal.getExternalModeMexArgs(<font color="#1122ff">'Serial'</font>)
+</span><span><a class="LN" name="22">   22   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONSERIAL_VERBOSE 0
+</span><span><a class="LN" name="23">   23   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONTCPIP_IPADDRESS codertarget.arduinobase.internal.getExternalModeMexArgs(<font color="#1122ff">'Ethernet'</font>)
+</span><span><a class="LN" name="24">   24   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONTCPIP_PORT 17725
+</span><span><a class="LN" name="25">   25   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONTCPIP_VERBOSE 0
+</span><span><a class="LN" name="26">   26   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONWIFI_IPADDRESS codertarget.arduinobase.internal.getExternalModeMexArgs(<font color="#1122ff">'Wifi'</font>)
+</span><span><a class="LN" name="27">   27   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONWIFI_PORT 17725
+</span><span><a class="LN" name="28">   28   </a><font color="#992211">#</font><span class="PP">define</span> MW_CONNECTIONINFO_XCPONWIFI_VERBOSE 0
+</span><span><a class="LN" name="29">   29   </a><font color="#992211">#</font><span class="PP">define</span> MW_EXTMODE_CONFIGURATION Serial
+</span><span><a class="LN" name="30">   30   </a><font color="#992211">#</font><span class="PP">define</span> MW_EXTMODE_COMPORTBAUD 921600
+</span><span><a class="LN" name="31">   31   </a><font color="#992211">#</font><span class="PP">define</span> MW_EXTMODE_HOSTINTERFACE 0
+</span><span><a class="LN" name="32">   32   </a><font color="#992211">#</font><span class="PP">define</span> MW_EXTMODE_SIGNALBUFFERSIZE 250.000000
+</span><span><a class="LN" name="33">   33   </a><font color="#992211">#</font><span class="PP">define</span> MW_RTOS Baremetal
+</span><span><a class="LN" name="34">   34   </a><font color="#992211">#</font><span class="PP">define</span> MW_SCHEDULER_INTERRUPT_SOURCE 0
+</span><span><a class="LN" name="35">   35   </a><font color="#992211">#</font><span class="PP">define</span> MW_RUNTIME_BUILDACTION 1
+</span><span><a class="LN" name="36">   36   </a><font color="#992211">#</font><span class="PP">define</span> MW_RUNTIME_DISABLEPARALLELBUILD 0
+</span><span><a class="LN" name="37">   37   </a><font color="#992211">#</font><span class="PP">define</span> MW_RUNTIME_FORCEBUILDSTATICLIBRARY 0
+</span><span><a class="LN" name="38">   38   </a><font color="#992211">#</font><span class="PP">define</span> MW_HOSTCOMPORT_SET_HOST_COM_PORT 0
+</span><span><a class="LN" name="39">   39   </a><font color="#992211">#</font><span class="PP">define</span> MW_HOSTCOMPORT_COM_PORT_NUMBER 1
+</span><span><a class="LN" name="40">   40   </a><font color="#992211">#</font><span class="PP">define</span> MW_SIMULINKIO_ENABLE_SIMULINKIO 1
+</span><span><a class="LN" name="41">   41   </a><font color="#992211">#</font><span class="PP">define</span> MW_OVERRUNDETECTION_ENABLE_OVERRUN_DETECTION 0
+</span><span><a class="LN" name="42">   42   </a><font color="#992211">#</font><span class="PP">define</span> MW_OVERRUNDETECTION_DIGITAL_OUTPUT_TO_SET_ON_OVERRUN 13
+</span><span><a class="LN" name="43">   43   </a><font color="#992211">#</font><span class="PP">define</span> MW_ANALOGINREFVOLTAGE_ANALOG_INPUT_REFERENCE_VOLTAGE 0.000000
+</span><span><a class="LN" name="44">   44   </a><font color="#992211">#</font><span class="PP">define</span> MW_SERIAL_SERIAL0_BAUD_RATE 3
+</span><span><a class="LN" name="45">   45   </a><font color="#992211">#</font><span class="PP">define</span> MW_I2C_I2C0BUSSPEEDHZ 100000
+</span><span><a class="LN" name="46">   46   </a><font color="#992211">#</font><span class="PP">define</span> MW_SPI_SPI_CLOCK_OUT_FREQUENCY 1
+</span><span><a class="LN" name="47">   47   </a><font color="#992211">#</font><span class="PP">define</span> MW_SPI_SPI_MODE 0
+</span><span><a class="LN" name="48">   48   </a><font color="#992211">#</font><span class="PP">define</span> MW_SPI_SPI_BITORDER 0
+</span><span><a class="LN" name="49">   49   </a><font color="#992211">#</font><span class="PP">define</span> MW_SPI_SDSLAVESELECT 4.000000
+</span><span><a class="LN" name="50">   50   </a><font color="#992211">#</font><span class="PP">define</span> MW_SPI_CANCHIPSELECT 9.000000
+</span><span><a class="LN" name="51">   51   </a><font color="#992211">#</font><span class="PP">define</span> MW_ETHERNET_DISABLE_DHCP_ETHERNET 0
+</span><span><a class="LN" name="52">   52   </a><font color="#992211">#</font><span class="PP">define</span> MW_ETHERNET_LOCAL_IP_ADDRESS 192.168.0.20
+</span><span><a class="LN" name="53">   53   </a><font color="#992211">#</font><span class="PP">define</span> MW_ETHERNET_LOCAL_MAC_ADDRESS DE:AD:BE:EF:FE:ED
+</span><span><a class="LN" name="54">   54   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_WIFI_HARDWARE 0
+</span><span><a class="LN" name="55">   55   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_DISABLE_DHCP_WIFI 0
+</span><span><a class="LN" name="56">   56   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_WIFI_IP_ADDRESS 192.168.1.20
+</span><span><a class="LN" name="57">   57   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_WIFI_SSID yourNetwork
+</span><span><a class="LN" name="58">   58   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_SET_WIFI_ENCRYPTION 0
+</span><span><a class="LN" name="59">   59   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_WIFI_WEP_KEY D0D0DEADF00DABBADEAFBEADED
+</span><span><a class="LN" name="60">   60   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_WIFI_WEP_KEY_INDEX 0
+</span><span><a class="LN" name="61">   61   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_WIFI_WPA_PASSWORD secretPassword
+</span><span><a class="LN" name="62">   62   </a><font color="#992211">#</font><span class="PP">define</span> MW_WIFI_WIFI_ESP8266_HW_SERIAL_PORT 0
+</span><span><a class="LN" name="63">   63   </a><font color="#992211">#</font><span class="PP">define</span> MW_THINGSPEAK_ENABLE_CUSTOMSERVER 48
+</span><span><a class="LN" name="64">   64   </a><font color="#992211">#</font><span class="PP">define</span> MW_THINGSPEAK_IP_ADDRESS 184.106.153.149
+</span><span><a class="LN" name="65">   65   </a><font color="#992211">#</font><span class="PP">define</span> MW_THINGSPEAK_PORT 80
+</span><span><a class="LN" name="66">   66   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_CANBUSSPEED 10
+</span><span><a class="LN" name="67">   67   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_CANOSCILLATORFREQUENCY 1
+</span><span><a class="LN" name="68">   68   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_INTERRUPTPIN 2.000000
+</span><span><a class="LN" name="69">   69   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ALLOWALLFILTER 0
+</span><span><a class="LN" name="70">   70   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_BUFFER0IDTYPE 0
+</span><span><a class="LN" name="71">   71   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEMASK0_NOR 0
+</span><span><a class="LN" name="72">   72   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER0_NOR 255
+</span><span><a class="LN" name="73">   73   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER1_NOR 255
+</span><span><a class="LN" name="74">   74   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEMASK0_EXT 0
+</span><span><a class="LN" name="75">   75   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER0_EXT 255
+</span><span><a class="LN" name="76">   76   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER1_EXT 255
+</span><span><a class="LN" name="77">   77   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_BUFFER1IDTYPE 0
+</span><span><a class="LN" name="78">   78   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEMASK1_NOR 0
+</span><span><a class="LN" name="79">   79   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER2_NOR 255
+</span><span><a class="LN" name="80">   80   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER3_NOR 255
+</span><span><a class="LN" name="81">   81   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER4_NOR 255
+</span><span><a class="LN" name="82">   82   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER5_NOR 255
+</span><span><a class="LN" name="83">   83   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEMASK1_EXT 0
+</span><span><a class="LN" name="84">   84   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER2_EXT 255
+</span><span><a class="LN" name="85">   85   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER3_EXT 255
+</span><span><a class="LN" name="86">   86   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER4_EXT 255
+</span><span><a class="LN" name="87">   87   </a><font color="#992211">#</font><span class="PP">define</span> MW_CAN_ACCEPTANCEFILTER5_EXT 255
+</span><span><a class="LN" name="88">   88   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_COMMS 0
+</span><span><a class="LN" name="89">   89   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_MODE 0
+</span><span><a class="LN" name="90">   90   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_SLAVEID 1
+</span><span><a class="LN" name="91">   91   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_CONFIGCOIL 49
+</span><span><a class="LN" name="92">   92   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_COILADDR 0
+</span><span><a class="LN" name="93">   93   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_COILNUM 1
+</span><span><a class="LN" name="94">   94   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_CONFIGINPUT 49
+</span><span><a class="LN" name="95">   95   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_INPUTADDR 0
+</span><span><a class="LN" name="96">   96   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_INPUTNUM 1
+</span><span><a class="LN" name="97">   97   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_CONFIGHOLDINGREG 49
+</span><span><a class="LN" name="98">   98   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_HOLDINGREGADDR 0
+</span><span><a class="LN" name="99">   99   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_HOLDINGREGNUM 1
+</span><span><a class="LN" name="100">  100   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_CONFIGINPUTREG 49
+</span><span><a class="LN" name="101">  101   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_INPUTREGADDR 0
+</span><span><a class="LN" name="102">  102   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_INPUTREGNUM 1
+</span><span><a class="LN" name="103">  103   </a><font color="#992211">#</font><span class="PP">define</span> MW_MODBUS_MODBUS_MASTERTIMEOUT 100
+</span><span><a class="LN" name="104">  104   </a><font color="#992211">#</font><span class="PP">define</span> MW_RS485_RS485_SERIAL 0
+</span><span><a class="LN" name="105">  105   </a><font color="#992211">#</font><span class="PP">define</span> MW_RS485_RS485_BAUD 9600
+</span><span><a class="LN" name="106">  106   </a><font color="#992211">#</font><span class="PP">define</span> MW_RS485_RS485_CONFIG 3
+</span><span><a class="LN" name="107">  107   </a><font color="#992211">#</font><span class="PP">define</span> MW_RS485_RS485_DEPIN 8
+</span><span><a class="LN" name="108">  108   </a><font color="#992211">#</font><span class="PP">define</span> MW_RS485_RS485_REPIN 9
+</span><span><a class="LN" name="109">  109   </a><font color="#992211">#</font><span class="PP">define</span> MW_DISPLAY_ENABLECODEGEN 0
+</span><span><a class="LN" name="110">  110   </a><font color="#992211">#</font><span class="PP">define</span> MW_DISPLAY_APPLAUNCHBUTTON 
+</span><span><a class="LN" name="111">  111   </a><font color="#992211">#</font><span class="PP">define</span> MW_DATAVERSION 2016.02
+</span><span><a class="LN" name="112">  112   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_ENABLECODEGEN 0
+</span><span><a class="LN" name="113">  113   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_CIRCULARGAUGE_CODEGEN 1
+</span><span><a class="LN" name="114">  114   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_CIRCULARGAUGE_BLOCKCLASS codertarget.targetHiddenBlkInsert.internal.circularGauge
+</span><span><a class="LN" name="115">  115   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_CIRCULARGAUGE_REGFCN codertarget.arduinobase.blocks.registerDashboardBlk
+</span><span><a class="LN" name="116">  116   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_CIRCULARGAUGE_VALIDATEFCN codertarget.targetHiddenBlkInsert.internal.isDashboardBlockCodegenEnabled
+</span><span><a class="LN" name="117">  117   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_DISPLAYBLOCK_CODEGEN 1
+</span><span><a class="LN" name="118">  118   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_DISPLAYBLOCK_BLOCKCLASS codertarget.targetHiddenBlkInsert.internal.lcdTextDisplay
+</span><span><a class="LN" name="119">  119   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_DISPLAYBLOCK_REGFCN codertarget.arduinobase.blocks.registerDashboardBlk
+</span><span><a class="LN" name="120">  120   </a><font color="#992211">#</font><span class="PP">define</span> MW_DASHBOARDCODEGENINFO_DISPLAYBLOCK_VALIDATEFCN codertarget.targetHiddenBlkInsert.internal.isDashboardBlockCodegenEnabled
+</span><span><a class="LN" name="121">  121   </a>
+</span><span><a class="LN" name="122">  122   </a><font color="#992211">#</font><span class="PP">endif</span> <span class="CT">/* __MW_TARGET_HARDWARE_RESOURCES_H__ */</span>
+</span><span><a class="LN" name="123">  123   </a>
+</span><span><a class="LN" name="124">  124   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="125">  125   </a>
+</span><span><a class="LN" name="126">  126   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="127">  127   </a>
+</span></pre>
+</td></tr></table>
+</p>
+</body>
+</html>

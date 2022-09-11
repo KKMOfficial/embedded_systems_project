@@ -1,0 +1,328 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>RTW Report - MW_ArduinoHWInit.cpp</title>
+<link rel="stylesheet" type="text/css" href="rtwreport.css"></link><script language="JavaScript" type="text/javascript" src="rtwreport_utils.js"></script>
+<SCRIPT type="text/javascript" src="rtwannotate.js"></SCRIPT>
+</head>
+<body bgcolor="#eeeeee" onload="try {if (top) { if (top.rtwFileOnLoad) top.rtwFileOnLoad(window.document); else local_onload();}} catch(err) {};if (typeof rtwannotate === 'function') {rtwannotate('MW_ArduinoHWInit_cpp_cov.xml');}">
+<p>
+<table border="0" cellspacing="0" cellpadding="6" width="100%%" height="100%%"><tr><td width="100%%" valign="top" bgcolor="#ffffff">
+<h4>File: <a href="file:///C:/ProgramData/MATLAB/SupportPackages/R2021a/toolbox/target/supportpackages/arduinotarget/registry/../src/MW_ArduinoHWInit.cpp" target="rtwreport_document_frame" id="linkToText_plain">MW_ArduinoHWInit.cpp</a></h4>
+<pre id="RTWcode">
+<span><a class="LN" name="1">    1   </a><span class="CT">/* Arduino AVR Bareboard scheduler</span>
+</span><span><a class="LN" name="2">    2   </a><span class="CT"> *</span>
+</span><span><a class="LN" name="3">    3   </a><span class="CT"> * Copyright 2014-2020 The MathWorks, Inc.</span>
+</span><span><a class="LN" name="4">    4   </a><span class="CT"> */</span>
+</span><span><a class="LN" name="5">    5   </a>
+</span><span><a class="LN" name="6">    6   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;Arduino.h&quot;</font>
+</span><span><a class="LN" name="7">    7   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;io_wrappers.h&quot;</font>
+</span><span><a class="LN" name="8">    8   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(ARDUINO_ARM_CORTEX_M0_PLUS)
+</span><span><a class="LN" name="9">    9   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;arduinoARM_M0plusScheduler.h&quot;</font>
+</span><span><a class="LN" name="10">   10   </a><font color="#992211">#</font><span class="PP">elif</span> <span class="PP">defined</span>(ARDUINO_ARM_CORTEX_M3)
+</span><span><a class="LN" name="11">   11   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;arduinoARMScheduler.h&quot;</font>
+</span><span><a class="LN" name="12">   12   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;watchdog.h&quot;</font>
+</span><span><a class="LN" name="13">   13   </a><font color="#992211">#</font><span class="PP">else</span>
+</span><span><a class="LN" name="14">   14   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;arduinoAVRScheduler.h&quot;</font>
+</span><span><a class="LN" name="15">   15   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="16">   16   </a>
+</span><span><a class="LN" name="17">   17   </a><font color="#992211">#</font><span class="PP">ifdef</span> _RTT_NUMI2C_
+</span><span><a class="LN" name="18">   18   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;MW_arduinoI2C.h&quot;</font>
+</span><span><a class="LN" name="19">   19   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="20">   20   </a>
+</span><span><a class="LN" name="21">   21   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(ARDUINO_ARDUINO_NANO33BLE)
+</span><span><a class="LN" name="22">   22   </a>    #include <font color="#1122ff">&quot;MW_PWM_NANO33BLE.h&quot;</font>
+</span><span><a class="LN" name="23">   23   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="24">   24   </a>
+</span><span><a class="LN" name="25">   25   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_SPI_SSPIN_)) || (<span class="PP">defined</span>(_RTT_DUE_SPI_SSPIN4_)) || (<span class="PP">defined</span>(_RTT_DUE_SPI_SSPIN10_)) || (<span class="PP">defined</span>(_RTT_DUE_SPI_SSPIN52_))
+</span><span><a class="LN" name="26">   26   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;MW_SPIwriteRead.h&quot;</font>
+</span><span><a class="LN" name="27">   27   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="28">   28   </a>
+</span><span><a class="LN" name="29">   29   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_RS485_INUSE_))
+</span><span><a class="LN" name="30">   30   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;ArduinoRS485.h&quot;</font>
+</span><span><a class="LN" name="31">   31   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="32">   32   </a>
+</span><span><a class="LN" name="33">   33   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_MODBUS_MASTER_)) || (<span class="PP">defined</span>(_RTT_MODBUS_SLAVE_))
+</span><span><a class="LN" name="34">   34   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;ArduinoModbus.h&quot;</font>
+</span><span><a class="LN" name="35">   35   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="36">   36   </a>
+</span><span><a class="LN" name="37">   37   </a><font color="#992211">#</font><span class="PP">ifdef</span> NANO_MOTOR_CARRIER
+</span><span><a class="LN" name="38">   38   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&lt;Wire.h&gt;</font>
+</span><span><a class="LN" name="39">   39   </a><font color="#992211">#</font><span class="PP">define</span> PMIC_ADDRESS  0x6B
+</span><span><a class="LN" name="40">   40   </a><font color="#992211">#</font><span class="PP">define</span> PMIC_REG00    0x00
+</span><span><a class="LN" name="41">   41   </a><font color="#992211">#</font><span class="PP">define</span> PMIC_REG01    0x01
+</span><span><a class="LN" name="42">   42   </a><font color="#992211">#</font><span class="PP">define</span> PMIC_REG02    0x02
+</span><span><a class="LN" name="43">   43   </a><font color="#992211">#</font><span class="PP">define</span> PMIC_REG04    0x04
+</span><span><a class="LN" name="44">   44   </a><font color="#992211">#</font><span class="PP">define</span> PMIC_REG05    0x05
+</span><span><a class="LN" name="45">   45   </a><span class="DT">void</span> <a href="#fcn_MW_EnableNanoCarrierBatteryCharging" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_MW_EnableNanoCarrierBatteryCharging');" target="_self"><font color="#1122aa">MW_EnableNanoCarrierBatteryCharging</font></a>(<span class="DT">void</span>);
+</span><span><a class="LN" name="46">   46   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="47">   47   </a>
+</span><span><a class="LN" name="48">   48   </a><span class="CT">// Wifi init routines</span>
+</span><span><a class="LN" name="49">   49   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&lt;inttypes.h&gt;</font>
+</span><span><a class="LN" name="50">   50   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_WIFI_EXTMODE_) &amp;&amp; (_RTT_WIFI_EXTMODE_ == 1)) || (<span class="PP">defined</span>(_RTT_WIFI_UDP_) &amp;&amp; (_RTT_WIFI_UDP_ != 0)) || (<span class="PP">defined</span>(_RTT_WIFI_TCP_) &amp;&amp; (_RTT_WIFI_TCP_ != 0))|| <span class="PP">defined</span>(_RTT_THINGSPEAK_WIFI_) || <span class="PP">defined</span>(_RTT_WEBSOCKET_PORT_)
+</span><span><a class="LN" name="51">   51   </a>    #<span class="KW">if</span> defined(ARDUINO_WIFI_LIB_101)
+</span><span><a class="LN" name="52">   52   </a>        #include &lt;WiFi101.h&gt;
+</span><span><a class="LN" name="53">   53   </a>    #elif defined(ARDUINO_WIFI_LIB_NINA)
+</span><span><a class="LN" name="54">   54   </a>        #include &lt;WiFiNINA.h&gt;
+</span><span><a class="LN" name="55">   55   </a>    #<span class="KW">else</span>
+</span><span><a class="LN" name="56">   56   </a>        #include &lt;WiFi.h&gt;
+</span><span><a class="LN" name="57">   57   </a>    #endif
+</span><span><a class="LN" name="58">   58   </a>    #include &lt;SPI.h&gt;
+</span><span><a class="LN" name="59">   59   </a>
+</span><span><a class="LN" name="60">   60   </a>    <span class="CT">/*#define that helps to stringify build flags</span>
+</span><span><a class="LN" name="61">   61   </a><span class="CT">    //Double evaluation is needed so that the double quotes can be derived out</span>
+</span><span><a class="LN" name="62">   62   </a><span class="CT">    //of the build flag and can be assigned to a character array */</span>
+</span><span><a class="LN" name="63">   63   </a>    #define RTT_StringifyBuildFlag(x) RTT_StringParamExpanded(x)
+</span><span><a class="LN" name="64">   64   </a>    #define RTT_StringParamExpanded(x)  #x 
+</span><span><a class="LN" name="65">   65   </a>
+</span><span><a class="LN" name="66">   66   </a>    IPAddress wifiLocalIpAddress(_RTT_WIFI_Local_IP1, _RTT_WIFI_Local_IP2, _RTT_WIFI_Local_IP3, _RTT_WIFI_Local_IP4);
+</span><span><a class="LN" name="67">   67   </a>    <span class="DT">char</span> <a name="var_ssid">ssid</a>[] = RTT_StringifyBuildFlag(_RTT_WIFI_SSID);
+</span><span><a class="LN" name="68">   68   </a>    <span class="DT">int</span> <a href="io_wrappers_cpp.html#var_configureSuccess" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_configureSuccess');" target="_self"><font color="#1122aa">configureSuccess</font></a> = WL_IDLE_STATUS;
+</span><span><a class="LN" name="69">   69   </a>    <span class="DT">int</span> <a href="io_wrappers_cpp.html#var_trialcount" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_trialcount');" target="_self"><font color="#1122aa">trialcount</font></a>;
+</span><span><a class="LN" name="70">   70   </a>
+</span><span><a class="LN" name="71">   71   </a>    #ifdef _RTT_WIFI_WEP
+</span><span><a class="LN" name="72">   72   </a>        <span class="DT">char</span> <a name="var_key">key</a>[] = RTT_StringifyBuildFlag(_RTT_WIFI_KEY);
+</span><span><a class="LN" name="73">   73   </a>        <span class="DT">int</span> <a name="var_keyIndex">keyIndex</a> = _RTT_WIFI_KEY_INDEX;
+</span><span><a class="LN" name="74">   74   </a>    #endif <span class="CT">//_RTT_WIFI_WEP</span>
+</span><span><a class="LN" name="75">   75   </a>
+</span><span><a class="LN" name="76">   76   </a>    #ifdef _RTT_WIFI_WPA
+</span><span><a class="LN" name="77">   77   </a>        <span class="DT">char</span> <a name="var_wpapass">wpapass</a>[] = RTT_StringifyBuildFlag(_RTT_WIFI_WPA_PASSWORD);
+</span><span><a class="LN" name="78">   78   </a>    #endif <span class="CT">//_RTT_WIFI_WPA</span>
+</span><span><a class="LN" name="79">   79   </a>        
+</span><span><a class="LN" name="80">   80   </a><font color="#992211">#</font><span class="PP">endif</span> <span class="CT">//(defined(_RTT_THINGSPEAK_WIFI_) || (_RTT_WIFI_TCP_ !=0) || defined(_RTT_WEBSOCKET_PORT_))</span>
+</span><span><a class="LN" name="81">   81   </a>
+</span><span><a class="LN" name="82">   82   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;MW_ArduinoHWInit.h&quot;</font>
+</span><span><a class="LN" name="83">   83   </a><font color="#992211">#</font><span class="PP">ifdef</span> _MW_DASHBOARD_BLOCK_PRESENT_
+</span><span><a class="LN" name="84">   84   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;MW_graphicPrimitive.h&quot;</font>
+</span><span><a class="LN" name="85">   85   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="86">   86   </a>
+</span><span><a class="LN" name="87">   87   </a>
+</span><span><a class="LN" name="88">   88   </a>  
+</span><span><a class="LN" name="89">   89   </a><span class="DT">void</span> <a name="fcn_MW_Modbus_Slave_Poll">MW_Modbus_Slave_Poll</a>(<span class="DT">void</span>)
+</span><span><a class="LN" name="90">   90   </a><b>{</b>
+</span><span><a class="LN" name="91">   91   </a>    #<span class="KW">if</span> defined(_RTT_MODBUS_SLAVE_)
+</span><span><a class="LN" name="92">   92   </a>    ModbusRTUServer.poll();
+</span><span><a class="LN" name="93">   93   </a>    #endif
+</span><span><a class="LN" name="94">   94   </a><b>}</b>
+</span><span><a class="LN" name="95">   95   </a>
+</span><span><a class="LN" name="96">   96   </a><span class="DT">void</span> <a name="fcn_MW_ArduinoNano33BLESenseInit">MW_ArduinoNano33BLESenseInit</a>(<span class="DT">void</span>)
+</span><span><a class="LN" name="97">   97   </a><b>{</b>
+</span><span><a class="LN" name="98">   98   </a>  #<span class="KW">if</span> (defined(ARDUINO_ARDUINO_NANO33BLE))
+</span><span><a class="LN" name="99">   99   </a>    initVariant();    
+</span><span><a class="LN" name="100">  100   </a>    #<span class="KW">if</span> defined(SERIAL_CDC)
+</span><span><a class="LN" name="101">  101   </a>       PluggableUSBD().begin();
+</span><span><a class="LN" name="102">  102   </a>       SerialUSB.begin(115200);
+</span><span><a class="LN" name="103">  103   </a>    #endif  
+</span><span><a class="LN" name="104">  104   </a>    #<span class="KW">if</span> defined(_RTT_PWM_NANO33BLE_INUSE)
+</span><span><a class="LN" name="105">  105   </a>        MW_NANO33BLE_PWM_Setup();
+</span><span><a class="LN" name="106">  106   </a>    #endif
+</span><span><a class="LN" name="107">  107   </a> #endif
+</span><span><a class="LN" name="108">  108   </a><b>}</b>
+</span><span><a class="LN" name="109">  109   </a>
+</span><span><a class="LN" name="110">  110   </a><span class="DT">void</span> <a name="fcn_MW_Arduino_Init">MW_Arduino_Init</a>(<span class="DT">void</span>)
+</span><span><a class="LN" name="111">  111   </a><b>{</b>
+</span><span><a class="LN" name="112">  112   </a>    <span class="CT">//Hardware specific init for Arduino nano 33 ble sense</span>
+</span><span><a class="LN" name="113">  113   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(ARDUINO_ARDUINO_NANO33BLE))
+</span><span><a class="LN" name="114">  114   </a>    <a href="#fcn_MW_ArduinoNano33BLESenseInit" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_MW_ArduinoNano33BLESenseInit');" target="_self"><font color="#1122aa">MW_ArduinoNano33BLESenseInit</font></a>();
+</span><span><a class="LN" name="115">  115   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="116">  116   </a>    <span class="CT">//Disable watchdog for Arduino Due. watchdog</span>
+</span><span><a class="LN" name="117">  117   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_ROTH_DUE_))
+</span><span><a class="LN" name="118">  118   </a>    watchdogDisable();
+</span><span><a class="LN" name="119">  119   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="120">  120   </a>    
+</span><span><a class="LN" name="121">  121   </a>    <span class="CT">/*</span>
+</span><span><a class="LN" name="122">  122   </a><span class="CT">     * Initialize Serial Peripheral</span>
+</span><span><a class="LN" name="123">  123   </a><span class="CT">     */</span>
+</span><span><a class="LN" name="124">  124   </a>    <span class="CT">// Always Initialize Serial0</span>
+</span><span><a class="LN" name="125">  125   </a>    Serial_begin(0, _RTT_BAUDRATE_SERIAL0_);
+</span><span><a class="LN" name="126">  126   </a>    
+</span><span><a class="LN" name="127">  127   </a>    <span class="CT">/* Overrun Detection Initialization */</span>
+</span><span><a class="LN" name="128">  128   </a><font color="#992211">#</font><span class="PP">ifdef</span> _RTT_OVERRUN_DIGITAL_PIN_
+</span><span><a class="LN" name="129">  129   </a>    pinMode(_RTT_OVERRUN_DIGITAL_PIN_, OUTPUT);
+</span><span><a class="LN" name="130">  130   </a>    
+</span><span><a class="LN" name="131">  131   </a>    <span class="CT">/* Init the overrun detection pin to zero or else the Pin is always in a</span>
+</span><span><a class="LN" name="132">  132   </a><span class="CT">     * high/tristate giving the user a wrong indication of overrun conditions */</span>
+</span><span><a class="LN" name="133">  133   </a>    digitalWrite(_RTT_OVERRUN_DIGITAL_PIN_, LOW);
+</span><span><a class="LN" name="134">  134   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="135">  135   </a>    
+</span><span><a class="LN" name="136">  136   </a>    <span class="CT">/*</span>
+</span><span><a class="LN" name="137">  137   </a><span class="CT">     * Initialize Analog Reference Voltage</span>
+</span><span><a class="LN" name="138">  138   </a><span class="CT">     * Default - Due</span>
+</span><span><a class="LN" name="139">  139   </a><span class="CT">     * Default, Internal 1.1, Internal 2.56, External -  Mega 2560, Mega ADK</span>
+</span><span><a class="LN" name="140">  140   </a><span class="CT">     * Default, Internal, External - Other Arduino targets</span>
+</span><span><a class="LN" name="141">  141   </a><span class="CT">     */</span>
+</span><span><a class="LN" name="142">  142   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_ROTH_MEGA2560_))
+</span><span><a class="LN" name="143">  143   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 1))
+</span><span><a class="LN" name="144">  144   </a>    analogReference(INTERNAL1V1);
+</span><span><a class="LN" name="145">  145   </a><font color="#992211">#</font><span class="PP">elif</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 2))
+</span><span><a class="LN" name="146">  146   </a>    analogReference(INTERNAL2V56);
+</span><span><a class="LN" name="147">  147   </a><font color="#992211">#</font><span class="PP">elif</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 3))
+</span><span><a class="LN" name="148">  148   </a>    analogReference(EXTERNAL);
+</span><span><a class="LN" name="149">  149   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="150">  150   </a><font color="#992211">#</font><span class="PP">elif</span> <span class="PP">defined</span>(ARDUINO_ARM_CORTEX_M0_PLUS)
+</span><span><a class="LN" name="151">  151   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 1))
+</span><span><a class="LN" name="152">  152   </a>    analogReference(AR_INTERNAL1V0);
+</span><span><a class="LN" name="153">  153   </a><font color="#992211">#</font><span class="PP">elif</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 2))
+</span><span><a class="LN" name="154">  154   </a>    analogReference(AR_INTERNAL1V65);
+</span><span><a class="LN" name="155">  155   </a><font color="#992211">#</font><span class="PP">elif</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 3))
+</span><span><a class="LN" name="156">  156   </a>    analogReference(AR_INTERNAL2V23);
+</span><span><a class="LN" name="157">  157   </a><font color="#992211">#</font><span class="PP">elif</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 4))
+</span><span><a class="LN" name="158">  158   </a>    analogReference(AR_EXTERNAL);
+</span><span><a class="LN" name="159">  159   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="160">  160   </a><font color="#992211">#</font><span class="PP">else</span>
+</span><span><a class="LN" name="161">  161   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 1))
+</span><span><a class="LN" name="162">  162   </a>    analogReference(INTERNAL);
+</span><span><a class="LN" name="163">  163   </a><font color="#992211">#</font><span class="PP">elif</span> (<span class="PP">defined</span>(_RTT_ANALOG_REF_) &amp;&amp; (_RTT_ANALOG_REF_ == 2))
+</span><span><a class="LN" name="164">  164   </a>    analogReference(EXTERNAL);
+</span><span><a class="LN" name="165">  165   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="166">  166   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="167">  167   </a>    
+</span><span><a class="LN" name="168">  168   </a>    <span class="CT">/*</span>
+</span><span><a class="LN" name="169">  169   </a><span class="CT">     * Initialize SPI bus</span>
+</span><span><a class="LN" name="170">  170   </a><span class="CT">     */</span>
+</span><span><a class="LN" name="171">  171   </a>    <span class="CT">//_RTT_SPI_SSPIN_ definition is applicable for all boards excluding Due</span>
+</span><span><a class="LN" name="172">  172   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(_RTT_SPI_SSPIN_)
+</span><span><a class="LN" name="173">  173   </a>    MW_SPIwriteReadSetup();
+</span><span><a class="LN" name="174">  174   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="175">  175   </a>    
+</span><span><a class="LN" name="176">  176   </a>    <span class="CT">//Initialize Modbus</span>
+</span><span><a class="LN" name="177">  177   </a>    <span class="DT">int</span> modStatus;
+</span><span><a class="LN" name="178">  178   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(_RTT_MODBUS_MASTER_)
+</span><span><a class="LN" name="179">  179   </a>    modStatus = ModbusRTUClient.begin(_RTT_RS485_BAUD_, _RTT_RS485_CONFIG_);
+</span><span><a class="LN" name="180">  180   </a>    ModbusRTUClient.setTimeout(_RTT_MODBUS_MASTERTIMEOUT_/1000);
+</span><span><a class="LN" name="181">  181   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="182">  182   </a>    
+</span><span><a class="LN" name="183">  183   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(_RTT_MODBUS_SLAVE_)
+</span><span><a class="LN" name="184">  184   </a>    modStatus = ModbusRTUServer.begin(_RTT_MODBUS_SLAVEID_, _RTT_RS485_BAUD_, _RTT_RS485_CONFIG_);
+</span><span><a class="LN" name="185">  185   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(_RTT_MODBUS_CONFIGCOIL_)
+</span><span><a class="LN" name="186">  186   </a>    ModbusRTUServer.configureCoils(_RTT_MODBUS_COILADDR_,_RTT_MODBUS_COILNUM_);
+</span><span><a class="LN" name="187">  187   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="188">  188   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(_RTT_MODBUS_CONFIGINPUT_)
+</span><span><a class="LN" name="189">  189   </a>    ModbusRTUServer.configureDiscreteInputs(_RTT_MODBUS_INPUPTADDR_,_RTT_MODBUS_INPUTNUM_);
+</span><span><a class="LN" name="190">  190   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="191">  191   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(_RTT_MODBUS_CONFIGHOLDINGREG_)
+</span><span><a class="LN" name="192">  192   </a>    ModbusRTUServer.configureHoldingRegisters(_RTT_MODBUS_HOLDINGREGADDR_,_RTT_MODBUS_HOLDINGREGNUM_);
+</span><span><a class="LN" name="193">  193   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="194">  194   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(_RTT_MODBUS_CONFIGINPUTREG_)
+</span><span><a class="LN" name="195">  195   </a>    ModbusRTUServer.configureInputRegisters(_RTT_MODBUS_INPUTREGADDR_,_RTT_MODBUS_INPUTREGNUM_);
+</span><span><a class="LN" name="196">  196   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="197">  197   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="198">  198   </a>      
+</span><span><a class="LN" name="199">  199   </a><span class="CT">/* </span>
+</span><span><a class="LN" name="200">  200   </a><span class="CT"> * Initialize wifi      </span>
+</span><span><a class="LN" name="201">  201   </a><span class="CT"> */</span>
+</span><span><a class="LN" name="202">  202   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(_RTT_WIFI_UDP_) &amp;&amp; (_RTT_WIFI_UDP_ != 0)) || (<span class="PP">defined</span>(_RTT_WIFI_TCP_) &amp;&amp; (_RTT_WIFI_TCP_ != 0))|| <span class="PP">defined</span>(_RTT_THINGSPEAK_WIFI_) || <span class="PP">defined</span>(_RTT_WEBSOCKET_PORT_)
+</span><span><a class="LN" name="203">  203   </a>    <span class="CT">/* Begin WiFi*/</span>
+</span><span><a class="LN" name="204">  204   </a>    <span class="KW">while</span>(<a href="io_wrappers_cpp.html#var_configureSuccess" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_configureSuccess');" target="_self"><font color="#1122aa">configureSuccess</font></a>!=WL_CONNECTED)
+</span><span><a class="LN" name="205">  205   </a>    <b>{</b>
+</span><span><a class="LN" name="206">  206   </a>        #<span class="KW">if</span> (defined(_RTT_DISABLE_Wifi_DHCP_) &amp;&amp; (_RTT_DISABLE_Wifi_DHCP_ !=0))
+</span><span><a class="LN" name="207">  207   </a>            WiFi.config(wifiLocalIpAddress);
+</span><span><a class="LN" name="208">  208   </a>        #endif
+</span><span><a class="LN" name="209">  209   </a>
+</span><span><a class="LN" name="210">  210   </a>        #ifdef _RTT_WIFI_WEP
+</span><span><a class="LN" name="211">  211   </a>            <a href="io_wrappers_cpp.html#var_configureSuccess" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_configureSuccess');" target="_self"><font color="#1122aa">configureSuccess</font></a>=WiFi.begin(<a href="#var_ssid" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_ssid');" target="_self"><font color="#1122aa">ssid</font></a>,<a href="#var_keyIndex" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_keyIndex');" target="_self"><font color="#1122aa">keyIndex</font></a>,<a href="#var_key" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_key');" target="_self"><font color="#1122aa">key</font></a>);
+</span><span><a class="LN" name="212">  212   </a>        #endif <span class="CT">//_RTT_WIFI_WEP</span>
+</span><span><a class="LN" name="213">  213   </a>
+</span><span><a class="LN" name="214">  214   </a>        #ifdef _RTT_WIFI_WPA
+</span><span><a class="LN" name="215">  215   </a>            <a href="io_wrappers_cpp.html#var_configureSuccess" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_configureSuccess');" target="_self"><font color="#1122aa">configureSuccess</font></a>=WiFi.begin(<a href="#var_ssid" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_ssid');" target="_self"><font color="#1122aa">ssid</font></a>,<a href="#var_wpapass" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_wpapass');" target="_self"><font color="#1122aa">wpapass</font></a>);
+</span><span><a class="LN" name="216">  216   </a>        #endif <span class="CT">//_RTT_WIFI_WPA</span>
+</span><span><a class="LN" name="217">  217   </a>
+</span><span><a class="LN" name="218">  218   </a>        #ifdef _RTT_WIFI_NONE
+</span><span><a class="LN" name="219">  219   </a>            <a href="io_wrappers_cpp.html#var_configureSuccess" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_configureSuccess');" target="_self"><font color="#1122aa">configureSuccess</font></a>=WiFi.begin(<a href="#var_ssid" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_ssid');" target="_self"><font color="#1122aa">ssid</font></a>);
+</span><span><a class="LN" name="220">  220   </a>        #endif <span class="CT">//_RTT_WIFI_NONE</span>
+</span><span><a class="LN" name="221">  221   </a>
+</span><span><a class="LN" name="222">  222   </a>            <span class="CT">//Wait for 10 seconds for Wifi connection to happen</span>
+</span><span><a class="LN" name="223">  223   </a>            <span class="DT">unsigned</span> <span class="DT">long</span> startMillis  = millis();
+</span><span><a class="LN" name="224">  224   </a>            <span class="KW">while</span>(millis()- startMillis &lt; 10000)
+</span><span><a class="LN" name="225">  225   </a>            <b>{</b>
+</span><span><a class="LN" name="226">  226   </a>            <b>}</b>;
+</span><span><a class="LN" name="227">  227   </a>    <b>}</b>
+</span><span><a class="LN" name="228">  228   </a>
+</span><span><a class="LN" name="229">  229   </a>    <span class="CT">/* Wait for Serial0 to be up*/</span>
+</span><span><a class="LN" name="230">  230   </a>    <span class="KW">for</span>(<a href="io_wrappers_cpp.html#var_trialcount" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_trialcount');" target="_self"><font color="#1122aa">trialcount</font></a>=0;<a href="io_wrappers_cpp.html#var_trialcount" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_trialcount');" target="_self"><font color="#1122aa">trialcount</font></a>&lt;5;<a href="io_wrappers_cpp.html#var_trialcount" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_trialcount');" target="_self"><font color="#1122aa">trialcount</font></a>++)
+</span><span><a class="LN" name="231">  231   </a>    <b>{</b>
+</span><span><a class="LN" name="232">  232   </a>        <span class="KW">if</span>(Serial)
+</span><span><a class="LN" name="233">  233   </a>        <b>{</b>
+</span><span><a class="LN" name="234">  234   </a>            <span class="KW">break</span>;
+</span><span><a class="LN" name="235">  235   </a>        <b>}</b><span class="KW">else</span>
+</span><span><a class="LN" name="236">  236   </a>        <b>{</b>
+</span><span><a class="LN" name="237">  237   </a>            <span class="DT">unsigned</span> <span class="DT">long</span> startMillis  = millis();
+</span><span><a class="LN" name="238">  238   </a>            <span class="KW">while</span>(millis()- startMillis &lt; 1000)
+</span><span><a class="LN" name="239">  239   </a>            <b>{</b>
+</span><span><a class="LN" name="240">  240   </a>            <b>}</b>;
+</span><span><a class="LN" name="241">  241   </a>        <b>}</b>
+</span><span><a class="LN" name="242">  242   </a>    <b>}</b>
+</span><span><a class="LN" name="243">  243   </a>
+</span><span><a class="LN" name="244">  244   </a>    #<span class="KW">if</span> (!(defined(_RTT_WIFI_EXTMODE_) &amp;&amp; (_RTT_WIFI_EXTMODE_ == 1)))
+</span><span><a class="LN" name="245">  245   </a>        <span class="KW">if</span> (<a href="io_wrappers_cpp.html#var_configureSuccess" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_configureSuccess');" target="_self"><font color="#1122aa">configureSuccess</font></a>==WL_CONNECTED)
+</span><span><a class="LN" name="246">  246   </a>        <b>{</b>
+</span><span><a class="LN" name="247">  247   </a>            <span class="CT">// If the Configuration is successful, relay back the assigned IP address.</span>
+</span><span><a class="LN" name="248">  248   </a>            IPAddress ip = WiFi.localIP();
+</span><span><a class="LN" name="249">  249   </a>            Serial.print(<font color="#1122ff">&quot;&lt;&lt;&lt; IP address :&quot;</font>);
+</span><span><a class="LN" name="250">  250   </a>            Serial.print(ip);
+</span><span><a class="LN" name="251">  251   </a>            Serial.println(<font color="#1122ff">&quot; &gt;&gt;&gt;&quot;</font>);            
+</span><span><a class="LN" name="252">  252   </a>        <b>}</b>
+</span><span><a class="LN" name="253">  253   </a>        <span class="KW">else</span>
+</span><span><a class="LN" name="254">  254   </a>        <b>{</b>
+</span><span><a class="LN" name="255">  255   </a>           <span class="CT">// If the Configuration failed,relay back the error message.</span>
+</span><span><a class="LN" name="256">  256   </a>           Serial.println(<font color="#1122ff">&quot;&lt;&lt;&lt; IP address :Failed to configure. >>>&quot;</font>);
+</span><span><a class="LN" name="257">  257   </a>        <b>}</b>
+</span><span><a class="LN" name="258">  258   </a>    #endif <span class="CT">//(!(defined(_RTT_WIFI_EXTMODE_) && (_RTT_WIFI_EXTMODE_ == 1)))  </span>
+</span><span><a class="LN" name="259">  259   </a>
+</span><span><a class="LN" name="260">  260   </a><font color="#992211">#</font><span class="PP">endif</span> <span class="CT">/*Initialize wifi*/</span>
+</span><span><a class="LN" name="261">  261   </a>  #ifdef NANO_MOTOR_CARRIER 
+</span><span><a class="LN" name="262">  262   </a>    <a href="#fcn_MW_EnableNanoCarrierBatteryCharging" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_MW_EnableNanoCarrierBatteryCharging');" target="_self"><font color="#1122aa">MW_EnableNanoCarrierBatteryCharging</font></a>();
+</span><span><a class="LN" name="263">  263   </a>  #endif
+</span><span><a class="LN" name="264">  264   </a>    #ifdef _MW_DASHBOARD_BLOCK_PRESENT_
+</span><span><a class="LN" name="265">  265   </a>    MW_initScreen();
+</span><span><a class="LN" name="266">  266   </a>    #endif
+</span><span><a class="LN" name="267">  267   </a><b>}</b>
+</span><span><a class="LN" name="268">  268   </a><span class="CT">/* Function: MW_Arduino_Terminate ================================================</span>
+</span><span><a class="LN" name="269">  269   </a><span class="CT"> * For Arduino MKR/Leonardo and its variants, the Virtual COM port is handled</span>
+</span><span><a class="LN" name="270">  270   </a><span class="CT"> * by the controller. In case the code running on the target exits main,</span>
+</span><span><a class="LN" name="271">  271   </a><span class="CT"> * the COM port cannot be accessed until a hard reset is performed.</span>
+</span><span><a class="LN" name="272">  272   </a><span class="CT"> * To over come this issue, a while loop is added to make sure that</span>
+</span><span><a class="LN" name="273">  273   </a><span class="CT"> * upon getting a stop command from external mode, the code running on</span>
+</span><span><a class="LN" name="274">  274   </a><span class="CT"> * the target stops but the code will not exit the main.</span>
+</span><span><a class="LN" name="275">  275   </a><span class="CT"> * This will ensure that the COM port is accessible even after the</span>
+</span><span><a class="LN" name="276">  276   </a><span class="CT"> * external mode has been stopped. */</span>
+</span><span><a class="LN" name="277">  277   </a><span class="DT">void</span> <a name="fcn_MW_Arduino_Terminate">MW_Arduino_Terminate</a>(<span class="DT">void</span>)<b>{</b>
+</span><span><a class="LN" name="278">  278   </a><font color="#992211">#</font><span class="PP">if</span> <span class="PP">defined</span>(ARDUINO_VIRTUAL_COM_PORT)
+</span><span><a class="LN" name="279">  279   </a>    <a href="arduinoAVRScheduler_cpp.html#fcn_disable_rt_OneStep" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_disable_rt_OneStep');" target="_self"><font color="#1122aa">disable_rt_OneStep</font></a>();
+</span><span><a class="LN" name="280">  280   </a>    <span class="KW">while</span>(1)<b>{</b><b>}</b>;     <span class="CT">/* To continue virtual COM port functionality */</span>
+</span><span><a class="LN" name="281">  281   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="282">  282   </a><b>}</b>
+</span><span><a class="LN" name="283">  283   </a>
+</span><span><a class="LN" name="284">  284   </a><font color="#992211">#</font><span class="PP">ifdef</span> NANO_MOTOR_CARRIER
+</span><span><a class="LN" name="285">  285   </a><span class="DT">void</span> <a name="fcn_MW_EnableNanoCarrierBatteryCharging">MW_EnableNanoCarrierBatteryCharging</a>(<span class="DT">void</span>) <b>{</b>
+</span><span><a class="LN" name="286">  286   </a>  Wire.begin();
+</span><span><a class="LN" name="287">  287   </a>  Wire.beginTransmission(PMIC_ADDRESS);
+</span><span><a class="LN" name="288">  288   </a>  Wire.write(PMIC_REG00);
+</span><span><a class="LN" name="289">  289   </a>  Wire.write(0x06); <span class="CT">// min sys voltage 3.88V + max input current 2.0 A</span>
+</span><span><a class="LN" name="290">  290   </a>  Wire.endTransmission();
+</span><span><a class="LN" name="291">  291   </a>  Wire.beginTransmission(PMIC_ADDRESS);
+</span><span><a class="LN" name="292">  292   </a>  Wire.write(PMIC_REG01);
+</span><span><a class="LN" name="293">  293   </a>  Wire.write(0x1B); <span class="CT">// Charge Battery + Minimum System Voltage 3.5V</span>
+</span><span><a class="LN" name="294">  294   </a>  Wire.endTransmission();
+</span><span><a class="LN" name="295">  295   </a>  Wire.beginTransmission(PMIC_ADDRESS);
+</span><span><a class="LN" name="296">  296   </a>  Wire.write(PMIC_REG02);
+</span><span><a class="LN" name="297">  297   </a>  Wire.write(0x00); <span class="CT">// Charge current  512 mA</span>
+</span><span><a class="LN" name="298">  298   </a>  Wire.endTransmission();
+</span><span><a class="LN" name="299">  299   </a>  Wire.beginTransmission(PMIC_ADDRESS);
+</span><span><a class="LN" name="300">  300   </a>  Wire.write(PMIC_REG04);
+</span><span><a class="LN" name="301">  301   </a>  Wire.write(0x9E); <span class="CT">// Charge Voltage Limit 4.128V</span>
+</span><span><a class="LN" name="302">  302   </a>  Wire.endTransmission();
+</span><span><a class="LN" name="303">  303   </a>  Wire.beginTransmission(PMIC_ADDRESS);
+</span><span><a class="LN" name="304">  304   </a>  Wire.write(PMIC_REG05);
+</span><span><a class="LN" name="305">  305   </a>  Wire.write(0x8A); <span class="CT">// Enable Battery Charge termination + disable watchdog</span>
+</span><span><a class="LN" name="306">  306   </a>  Wire.endTransmission();
+</span><span><a class="LN" name="307">  307   </a><b>}</b>
+</span><span><a class="LN" name="308">  308   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="309">  309   </a>
+</span><span><a class="LN" name="310">  310   </a><span class="CT">// LocalWords:  AVR Bareboard ADK SPI RTT SSPIN Modbus MKR</span>
+</span><span><a class="LN" name="311">  311   </a>
+</span></pre>
+</td></tr></table>
+</p>
+</body>
+</html>

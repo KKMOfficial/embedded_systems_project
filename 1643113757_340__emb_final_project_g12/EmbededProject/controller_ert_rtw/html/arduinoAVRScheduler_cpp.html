@@ -1,0 +1,151 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>RTW Report - arduinoAVRScheduler.cpp</title>
+<link rel="stylesheet" type="text/css" href="rtwreport.css"></link><script language="JavaScript" type="text/javascript" src="rtwreport_utils.js"></script>
+<SCRIPT type="text/javascript" src="rtwannotate.js"></SCRIPT>
+</head>
+<body bgcolor="#eeeeee" onload="try {if (top) { if (top.rtwFileOnLoad) top.rtwFileOnLoad(window.document); else local_onload();}} catch(err) {};if (typeof rtwannotate === 'function') {rtwannotate('arduinoAVRScheduler_cpp_cov.xml');}">
+<p>
+<table border="0" cellspacing="0" cellpadding="6" width="100%%" height="100%%"><tr><td width="100%%" valign="top" bgcolor="#ffffff">
+<h4>File: <a href="file:///C:/ProgramData/MATLAB/SupportPackages/R2021a/toolbox/target/supportpackages/arduinotarget/registry/../scheduler/src/arduinoAVRScheduler.cpp" target="rtwreport_document_frame" id="linkToText_plain">arduinoAVRScheduler.cpp</a></h4>
+<pre id="RTWcode">
+<span><a class="LN" name="1">    1   </a><span class="CT">/* Arduino AVR Bareboard scheduler</span>
+</span><span><a class="LN" name="2">    2   </a><span class="CT"> *</span>
+</span><span><a class="LN" name="3">    3   </a><span class="CT"> * Copyright 2013-2015 The MathWorks, Inc.</span>
+</span><span><a class="LN" name="4">    4   </a><span class="CT"> */</span>
+</span><span><a class="LN" name="5">    5   </a>
+</span><span><a class="LN" name="6">    6   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;Arduino.h&quot;</font>
+</span><span><a class="LN" name="7">    7   </a><font color="#992211">#</font><span class="PP">include</span> <font color="#992211">&quot;arduinoAVRScheduler.h&quot;</font>
+</span><span><a class="LN" name="8">    8   </a>
+</span><span><a class="LN" name="9">    9   </a><span class="DT">extern</span> <span class="DT">volatile</span> <span class="DT">int</span> <a href="ert_main_c.html#var_IsrOverrun" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_IsrOverrun');" target="_self"><font color="#1122aa">IsrOverrun</font></a>;
+</span><span><a class="LN" name="10">   10   </a><span class="DT">unsigned</span> <span class="DT">long</span> <a name="var_oldtime">oldtime</a> = 0L;
+</span><span><a class="LN" name="11">   11   </a><span class="DT">unsigned</span> <span class="DT">long</span> <a name="var_actualtime">actualtime</a>;
+</span><span><a class="LN" name="12">   12   </a>
+</span><span><a class="LN" name="13">   13   </a>
+</span><span><a class="LN" name="14">   14   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(MW_SCHEDULERCOUNTER) &amp;&amp;  (MW_SCHEDULERCOUNTER &gt; 1))
+</span><span><a class="LN" name="15">   15   </a>   #<span class="KW">if</span> (MW_SCHEDULERCOUNTER &gt;= 65536)
+</span><span><a class="LN" name="16">   16   </a>      <span class="DT">volatile</span> uint32_t <a href="#var_scheduler_counter" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_scheduler_counter');" target="_self"><font color="#1122aa">scheduler_counter</font></a> = 0;
+</span><span><a class="LN" name="17">   17   </a>    #elif (MW_SCHEDULERCOUNTER &gt;= 256)
+</span><span><a class="LN" name="18">   18   </a>      <span class="DT">volatile</span> uint16_t <a href="#var_scheduler_counter" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_scheduler_counter');" target="_self"><font color="#1122aa">scheduler_counter</font></a> = 0;
+</span><span><a class="LN" name="19">   19   </a>    #<span class="KW">else</span>
+</span><span><a class="LN" name="20">   20   </a>      <span class="DT">volatile</span> uint8_t <a name="var_scheduler_counter">scheduler_counter</a> = 0;
+</span><span><a class="LN" name="21">   21   </a>    #endif
+</span><span><a class="LN" name="22">   22   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="23">   23   </a>                                  
+</span><span><a class="LN" name="24">   24   </a><span class="CT">/*</span>
+</span><span><a class="LN" name="25">   25   </a><span class="CT"> * Call the rt_Onestep function when the timer interrupt hits</span>
+</span><span><a class="LN" name="26">   26   </a><span class="CT"> *</span>
+</span><span><a class="LN" name="27">   27   </a><span class="CT"> */</span>
+</span><span><a class="LN" name="28">   28   </a><font color="#992211">#</font><span class="PP">ifndef</span> _MW_ARDUINO_LOOP_
+</span><span><a class="LN" name="29">   29   </a>ISR(INTERRUPT_VECTOR)
+</span><span><a class="LN" name="30">   30   </a><b>{</b>
+</span><span><a class="LN" name="31">   31   </a>    RESET_TIMER;
+</span><span><a class="LN" name="32">   32   </a>    
+</span><span><a class="LN" name="33">   33   </a>    #<span class="KW">if</span> (defined(MW_SCHEDULERCOUNTER) &amp;&amp; (MW_SCHEDULERCOUNTER &gt; 1))
+</span><span><a class="LN" name="34">   34   </a>      <span class="KW">if</span> ((++<a href="#var_scheduler_counter" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_scheduler_counter');" target="_self"><font color="#1122aa">scheduler_counter</font></a>) == MW_SCHEDULERCOUNTER) <b>{</b>
+</span><span><a class="LN" name="35">   35   </a>         <a href="#var_scheduler_counter" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_scheduler_counter');" target="_self"><font color="#1122aa">scheduler_counter</font></a> = 0;
+</span><span><a class="LN" name="36">   36   </a>    #endif
+</span><span><a class="LN" name="37">   37   </a>
+</span><span><a class="LN" name="38">   38   </a>    #ifdef _RTT_OVERRUN_DIGITAL_PIN_
+</span><span><a class="LN" name="39">   39   </a>        <span class="KW">if</span> (<a href="ert_main_c.html#var_IsrOverrun" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_IsrOverrun');" target="_self"><font color="#1122aa">IsrOverrun</font></a> == 1)
+</span><span><a class="LN" name="40">   40   </a>        <b>{</b>
+</span><span><a class="LN" name="41">   41   </a>          <span class="CT">// Overrun detected</span>
+</span><span><a class="LN" name="42">   42   </a>          digitalWrite(_RTT_OVERRUN_DIGITAL_PIN_, HIGH);
+</span><span><a class="LN" name="43">   43   </a>        <b>}</b>
+</span><span><a class="LN" name="44">   44   </a>    #endif
+</span><span><a class="LN" name="45">   45   </a>      <a href="ert_main_c.html#fcn_rt_OneStep" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_rt_OneStep');" target="_self"><font color="#1122aa">rt_OneStep</font></a>();
+</span><span><a class="LN" name="46">   46   </a>         
+</span><span><a class="LN" name="47">   47   </a>    #<span class="KW">if</span> (defined(MW_SCHEDULERCOUNTER) &amp;&amp; (MW_SCHEDULERCOUNTER &gt; 1))
+</span><span><a class="LN" name="48">   48   </a>      <b>}</b>
+</span><span><a class="LN" name="49">   49   </a>    #endif
+</span><span><a class="LN" name="50">   50   </a><b>}</b>
+</span><span><a class="LN" name="51">   51   </a><font color="#992211">#</font><span class="PP">endif</span>    
+</span><span><a class="LN" name="52">   52   </a>
+</span><span><a class="LN" name="53">   53   </a><span class="DT">void</span> <a name="fcn_configureArduinoAVRTimer">configureArduinoAVRTimer</a>(<span class="DT">void</span>)
+</span><span><a class="LN" name="54">   54   </a><b>{</b>
+</span><span><a class="LN" name="55">   55   </a><font color="#992211">#</font><span class="PP">ifndef</span> _MW_ARDUINO_LOOP_
+</span><span><a class="LN" name="56">   56   </a>  <span class="CT">// Sets up the timer overflow interrupt.</span>
+</span><span><a class="LN" name="57">   57   </a>  RESET_TIMER;
+</span><span><a class="LN" name="58">   58   </a>
+</span><span><a class="LN" name="59">   59   </a>  <span class="CT">// Initially disable the overflow interrupt (before configuration).</span>
+</span><span><a class="LN" name="60">   60   </a>  DISABLE_SCHEDULER_INT();
+</span><span><a class="LN" name="61">   61   </a>
+</span><span><a class="LN" name="62">   62   </a>  <span class="CT">// Set the timer to normal mode.</span>
+</span><span><a class="LN" name="63">   63   </a>  TIMER_NORMAL_MODE;
+</span><span><a class="LN" name="64">   64   </a>
+</span><span><a class="LN" name="65">   65   </a>  <span class="CT">// Set the prescaler.</span>
+</span><span><a class="LN" name="66">   66   </a>  SETUP_PRESCALER;
+</span><span><a class="LN" name="67">   67   </a>
+</span><span><a class="LN" name="68">   68   </a>  <span class="CT">// Enable the overflow interrupt.</span>
+</span><span><a class="LN" name="69">   69   </a>  ENABLE_SCHEDULER_INT();    
+</span><span><a class="LN" name="70">   70   </a><font color="#992211">#</font><span class="PP">endif</span>  
+</span><span><a class="LN" name="71">   71   </a><b>}</b>
+</span><span><a class="LN" name="72">   72   </a>
+</span><span><a class="LN" name="73">   73   </a>boolean <a name="fcn_disable_rt_OneStep">disable_rt_OneStep</a>(<span class="DT">void</span>)
+</span><span><a class="LN" name="74">   74   </a><b>{</b>
+</span><span><a class="LN" name="75">   75   </a>    boolean t_return = 0U;
+</span><span><a class="LN" name="76">   76   </a><font color="#992211">#</font><span class="PP">ifndef</span> _MW_ARDUINO_LOOP_
+</span><span><a class="LN" name="77">   77   </a>    t_return = GET_SCHEDULER_INT_EN_STATUS();
+</span><span><a class="LN" name="78">   78   </a>  <span class="CT">// Disable the overflow interrupt for XCP External Mode</span>
+</span><span><a class="LN" name="79">   79   </a>  DISABLE_SCHEDULER_INT();  
+</span><span><a class="LN" name="80">   80   </a><font color="#992211">#</font><span class="PP">endif</span> 
+</span><span><a class="LN" name="81">   81   </a>  <span class="KW">return</span> t_return;
+</span><span><a class="LN" name="82">   82   </a><b>}</b>
+</span><span><a class="LN" name="83">   83   </a>
+</span><span><a class="LN" name="84">   84   </a><span class="DT">void</span> <a name="fcn_enable_rt_OneStep">enable_rt_OneStep</a>(<span class="DT">void</span>)
+</span><span><a class="LN" name="85">   85   </a><b>{</b>
+</span><span><a class="LN" name="86">   86   </a><font color="#992211">#</font><span class="PP">ifndef</span> _MW_ARDUINO_LOOP_
+</span><span><a class="LN" name="87">   87   </a>  <span class="CT">// Enable the overflow interrupt</span>
+</span><span><a class="LN" name="88">   88   </a>  ENABLE_SCHEDULER_INT();  
+</span><span><a class="LN" name="89">   89   </a><font color="#992211">#</font><span class="PP">endif</span> 
+</span><span><a class="LN" name="90">   90   </a><b>}</b>
+</span><span><a class="LN" name="91">   91   </a>
+</span><span><a class="LN" name="92">   92   </a>boolean <a name="fcn_MW_Arduino_Loop">MW_Arduino_Loop</a>(<span class="DT">void</span>)
+</span><span><a class="LN" name="93">   93   </a><b>{</b>
+</span><span><a class="LN" name="94">   94   </a>    boolean ret = 0;
+</span><span><a class="LN" name="95">   95   </a>
+</span><span><a class="LN" name="96">   96   </a><font color="#992211">#</font><span class="PP">ifdef</span> _MW_ARDUINO_LOOP_
+</span><span><a class="LN" name="97">   97   </a>    <span class="DT">unsigned</span> <span class="DT">long</span> overruntime;
+</span><span><a class="LN" name="98">   98   </a><font color="#992211">#</font><span class="PP">if</span> (<span class="PP">defined</span>(MW_ARDUINO_MICROS))
+</span><span><a class="LN" name="99">   99   </a>    <a href="#var_actualtime" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_actualtime');" target="_self"><font color="#1122aa">actualtime</font></a> = micros();
+</span><span><a class="LN" name="100">  100   </a><font color="#992211">#</font><span class="PP">else</span>
+</span><span><a class="LN" name="101">  101   </a>    <a href="#var_actualtime" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_actualtime');" target="_self"><font color="#1122aa">actualtime</font></a> = millis();
+</span><span><a class="LN" name="102">  102   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="103">  103   </a>  
+</span><span><a class="LN" name="104">  104   </a>    <span class="KW">if</span> ((<span class="DT">unsigned</span> <span class="DT">long</span>) (<a href="#var_actualtime" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_actualtime');" target="_self"><font color="#1122aa">actualtime</font></a> - <a href="#var_oldtime" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_oldtime');" target="_self"><font color="#1122aa">oldtime</font></a>) &gt;= MW_ARDUINO_STEP_SIZE)
+</span><span><a class="LN" name="105">  105   </a>    <b>{</b>
+</span><span><a class="LN" name="106">  106   </a>        <a href="#var_oldtime" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_oldtime');" target="_self"><font color="#1122aa">oldtime</font></a> = <a href="#var_actualtime" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_actualtime');" target="_self"><font color="#1122aa">actualtime</font></a>;
+</span><span><a class="LN" name="107">  107   </a>        
+</span><span><a class="LN" name="108">  108   </a><font color="#992211">#</font><span class="PP">ifdef</span> _RTT_OVERRUN_DIGITAL_PIN_
+</span><span><a class="LN" name="109">  109   </a>        <span class="KW">if</span> (<a href="ert_main_c.html#var_IsrOverrun" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_IsrOverrun');" target="_self"><font color="#1122aa">IsrOverrun</font></a> == 1)
+</span><span><a class="LN" name="110">  110   </a>        <b>{</b>
+</span><span><a class="LN" name="111">  111   </a>            <span class="CT">// Overrun detected</span>
+</span><span><a class="LN" name="112">  112   </a>            digitalWrite(_RTT_OVERRUN_DIGITAL_PIN_, HIGH);
+</span><span><a class="LN" name="113">  113   </a>        <b>}</b>
+</span><span><a class="LN" name="114">  114   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="115">  115   </a>        <a href="ert_main_c.html#fcn_rt_OneStep" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'fcn_rt_OneStep');" target="_self"><font color="#1122aa">rt_OneStep</font></a>();
+</span><span><a class="LN" name="116">  116   </a>            #<span class="KW">if</span> (defined(_MW_ARDUINO_LOOP_))
+</span><span><a class="LN" name="117">  117   </a>                #<span class="KW">if</span> (defined(MW_ARDUINO_MICROS))
+</span><span><a class="LN" name="118">  118   </a>                        overruntime = micros();
+</span><span><a class="LN" name="119">  119   </a>                #<span class="KW">else</span>
+</span><span><a class="LN" name="120">  120   </a>                        overruntime = millis();
+</span><span><a class="LN" name="121">  121   </a>                #endif
+</span><span><a class="LN" name="122">  122   </a>                <span class="KW">if</span> ((<span class="DT">unsigned</span> <span class="DT">long</span>) (overruntime - <a href="#var_oldtime" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_oldtime');" target="_self"><font color="#1122aa">oldtime</font></a>) &gt;= MW_ARDUINO_STEP_SIZE)   
+</span><span><a class="LN" name="123">  123   </a>                  <a href="ert_main_c.html#var_IsrOverrun" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_IsrOverrun');" target="_self"><font color="#1122aa">IsrOverrun</font></a> = 1;
+</span><span><a class="LN" name="124">  124   </a>                <span class="KW">else</span>
+</span><span><a class="LN" name="125">  125   </a>                  <a href="ert_main_c.html#var_IsrOverrun" onclick="if (top) if (top.docHiliteMe) top.docHiliteMe(window, 'var_IsrOverrun');" target="_self"><font color="#1122aa">IsrOverrun</font></a> = 0;
+</span><span><a class="LN" name="126">  126   </a>            #endif
+</span><span><a class="LN" name="127">  127   </a><b>}</b>
+</span><span><a class="LN" name="128">  128   </a><font color="#992211">#</font><span class="PP">endif</span>
+</span><span><a class="LN" name="129">  129   </a>
+</span><span><a class="LN" name="130">  130   </a>    ret = 1;
+</span><span><a class="LN" name="131">  131   </a>    <span class="KW">return</span> ret;
+</span><span><a class="LN" name="132">  132   </a><b>}</b>
+</span><span><a class="LN" name="133">  133   </a>
+</span><span><a class="LN" name="134">  134   </a>
+</span></pre>
+</td></tr></table>
+</p>
+</body>
+</html>
